@@ -2,6 +2,9 @@
 #define DEQUE_H
 
 #include <stddef.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdbool.h>
 
 #define DATA_TYPE int
 #define KEY_TYPE int

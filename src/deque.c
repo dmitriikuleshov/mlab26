@@ -1,6 +1,5 @@
-#include <stdio.h>
-#include <stdbool.h>
 #include <deque.h>
+
 
 Node* node_create(KEY_TYPE key, VALUE_TYPE value) {
 	Node* new_node = (Node*)malloc(sizeof(Node));

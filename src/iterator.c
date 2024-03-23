@@ -1,7 +1,7 @@
 #include "iterator.h"
 
 
-Iterator* iter_create(STRUCT_TYPE* struct_object) {
+Iterator* iter_create(const STRUCT_TYPE* struct_object) {
 	Iterator* iter = (Iterator *) malloc(sizeof(Iterator));
 	if (iter == NULL) {
 		fprintf(stderr, "Memory allocation failed.\n");

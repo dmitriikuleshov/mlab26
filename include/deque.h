@@ -27,13 +27,13 @@ typedef struct Deque {
 } Deque;
 
 
-void deque_create(Deque*);
-bool deque_is_empty(const Deque*);
-void deque_push_front(Deque*);
-void deque_push_back(Deque*);
-void deque_pop_front(Deque*);
-void deque_pop_back(Deque*);
-void deque_print(const Deque*);
+Deque* deque_create();
+bool deque_is_empty(const Deque* deque);
+void deque_push_front(Deque* deque, const KEY_TYPE key, const VALUE_TYPE value);
+void deque_push_back(Deque* deque,const KEY_TYPE key, const VALUE_TYPE value);
+void deque_pop_front(Deque* deque);
+void deque_pop_back(Deque* deque);
+void deque_print(const Deque* deque);
 size_t deque_size(const Deque*);
 void deque_insert(Deque*, const int index, const KEY_TYPE, const VALUE_TYPE);
 void deque_remove(Deque*, const int index);

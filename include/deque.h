@@ -17,8 +17,8 @@ typedef struct Node {
 
 typedef struct Deque {
 	int size;
-	Node* left;
-	Node* right;
+	Node* back;
+	Node* front;
 } Deque;
 
 

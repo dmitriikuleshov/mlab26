@@ -3,7 +3,7 @@
 
 Iterator* iter_create(STRUCT_TYPE* struct_object) {
 	Iterator* iter = (Iterator *) malloc(sizeof(Iterator));
-	iter->node = struct_object->left;
+	iter->node = struct_object->back;
 }
 
 

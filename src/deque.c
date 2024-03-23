@@ -27,56 +27,56 @@ void deque_create(Deque* deque) {
 
 
 bool deque_is_empty(Deque* deque) {
-	return (deque->left == NULL && deque->right == NULL);
+	return (deque->back == NULL && deque->front == NULL);
 }
 
 
 void deque_push_front(Deque* deque, KEY_TYPE key, VALUE_TYPE value) {
 	Node* new_node = node_create(key, value);
-	if (deque->right == NULL && deque->left == NULL) {
-		deque->left = new_node;
-		deque->right = new_node;
+	if (deque->front == NULL && deque->back == NULL) {
+		deque->back = new_node;
+		deque->front = new_node;
 	} else {
-		new_node->prev = deque->right;
-		deque->right->next = new_node;
-		deque->right = new_node;
+		new_node->prev = deque->front;
+		deque->front->next = new_node;
+		deque->front = new_node;
 	}
 }
 
 
 void deque_push_back(Deque* deque, KEY_TYPE key, VALUE_TYPE value) {
 	Node* new_node = node_create(key, value);
-	if (deque->left == NULL && deque->right == NULL) {
-		deque->left = new_node;
-		deque->right = new_node;
+	if (deque->back == NULL && deque->front == NULL) {
+		deque->back = new_node;
+		deque->front = new_node;
 	} else {
-		new_node->next = deque->left;
-		deque->left->prev = new_node;
-		deque->left = new_node;
+		new_node->next = deque->back;
+		deque->back->prev = new_node;
+		deque->back = new_node;
 	}
 }
 
 
 void deque_pop_front(Deque* deque) {
-	if (deque->right == NULL) {
+	if (deque->front == NULL) {
 		printf("pop_front from an empty deque!");
 	} else {
-		Node* new_right = deque->right->prev;
-		free(deque->right);
-		deque->right = new_right;
-		deque->right->next = NULL;
+		Node* new_front = deque->front->prev;
+		free(deque->front);
+		deque->front = new_front;
+		deque->front->next = NULL;
 	}
 }
 
 
 void deque_pop_back(Deque* deque) {
-	if(deque->left == NULL) {
+	if(deque->back == NULL) {
 		printf("pop_back from an empty deque!");
 	} else {
-		Node* new_left = deque->left->next;
-		free(deque->left);
-		deque->left = new_left;
-		deque->left->prev = NULL;
+		Node* new_back = deque->back->next;
+		free(deque->back);
+		deque->back = new_back;
+		deque->back->prev = NULL;
 	}
 }
 

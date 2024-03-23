@@ -40,12 +40,14 @@ VALUE_TYPE iter_get(Iterator* iter) {
 
 
 void iter_delete(Iterator* iter) {
-	if (iter == NULL || iter->node == NULL) {
+    if (iter == NULL || iter->node == NULL) {
         return;
     }
-	iter->node = iter->node->next;
-	STRUCT_NODE_TYPE* node_to_delete = iter->node->prev;
-	STRUCT_NODE_TYPE* new_prev = node_to_delete->prev;
-	iter->node->prev = new_prev;
-	free(node_to_delete);
+    STRUCT_NODE_TYPE* node_to_delete = iter->node;
+    iter->node = iter->node->next; // Перемещаем указатель на следующий узел
+    if (iter->node != NULL) {
+        iter->node->prev = node_to_delete->prev; // Обновляем указатель на предыдущий узел у следующего узла
+    }
+    free(node_to_delete);
 }
+

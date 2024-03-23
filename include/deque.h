@@ -1,10 +1,11 @@
 #ifndef DEQUE_H
 #define DEQUE_H
 
+#include <stddef.h>
+
 #define DATA_TYPE int
 #define KEY_TYPE int
 #define VALUE_TYPE int
-
 
 typedef struct Node {
 	KEY_TYPE key;

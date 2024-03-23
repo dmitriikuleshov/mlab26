@@ -30,6 +30,34 @@ bool deque_is_empty(Deque* deque) {
 }
 
 
+void deque_push_front(Deque* deque, KEY_TYPE key, VALUE_TYPE value) {
+	Node* new_node = node_create(key, value);
+	if (deque->right == NULL && deque->left == NULL) {
+		deque->left = new_node;
+		deque->right = new_node;
+	} else {
+		new_node->prev = deque->right;
+		deque->right->next = new_node;
+		deque->right = new_node;
+	}
+}
 
+
+void deque_push_back(Deque* deque, KEY_TYPE key, VALUE_TYPE value) {
+	Node* new_node = node_create(key, value);
+	if (deque->left == NULL && deque->right == NULL) {
+		deque->left = new_node;
+		deque->right = new_node;
+	} else {
+		new_node->next = deque->left;
+		deque->left->prev = new_node;
+		deque->left = new_node;
+	}
+}
+
+
+size_t deque_size(const Deque*) {
+
+}
 
 

@@ -6,6 +6,7 @@
 #define STRUCT_NODE_TYPE Node
 #define STRUCT_TYPE Deque
 
+
 typedef struct Iterator {
 	STRUCT_NODE_TYPE* node;
 } Iterator;

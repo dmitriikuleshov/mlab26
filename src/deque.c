@@ -1,4 +1,5 @@
 #include <deque.h>
+#include <iterator.h>
 
 
 Node* node_create(KEY_TYPE key, VALUE_TYPE value) {
@@ -81,8 +82,17 @@ void deque_pop_back(Deque* deque) {
 
 
 void deque_print(const Deque* deque) {
-	
+	Iterator* iter = iter_create(deque);
+	Node* cur_node = iter->node;
+	while (iter != NULL) {
+		printf("(key="FORMAT_SPECIFIER_KEY_TYPE ", value=" FORMAT_SPECIFIER_VALUE_TYPE ") ", cur_node->key, cur_node->value);
+		cur_node = iter_next(iter);
+	}
 }
+
+size_t deque_size(const Deque*) {
+
+};
 
 
 size_t deque_size(const Deque*) {

@@ -9,6 +9,8 @@
 #define DATA_TYPE int
 #define KEY_TYPE int
 #define VALUE_TYPE int
+#define FORMAT_SPECIFIER_KEY_TYPE "%d"
+#define FORMAT_SPECIFIER_VALUE_TYPE "%d"
 
 typedef struct Node {
 	KEY_TYPE key;

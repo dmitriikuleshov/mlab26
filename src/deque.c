@@ -15,6 +15,7 @@ Node* node_create(KEY_TYPE key, VALUE_TYPE value) {
 	return new_node;
 }
 
+
 void deque_create(Deque* deque) {
 	Deque* new_deque = (Deque*)malloc(sizeof(Deque));
 	if (new_deque == NULL) {
@@ -53,6 +54,35 @@ void deque_push_back(Deque* deque, KEY_TYPE key, VALUE_TYPE value) {
 		deque->left->prev = new_node;
 		deque->left = new_node;
 	}
+}
+
+
+void deque_pop_front(Deque* deque) {
+	if (deque->right == NULL) {
+		printf("pop_front from an empty deque!");
+	} else {
+		Node* new_right = deque->right->prev;
+		free(deque->right);
+		deque->right = new_right;
+		deque->right->next = NULL;
+	}
+}
+
+
+void deque_pop_back(Deque* deque) {
+	if(deque->left == NULL) {
+		printf("pop_back from an empty deque!");
+	} else {
+		Node* new_left = deque->left->next;
+		free(deque->left);
+		deque->left = new_left;
+		deque->left->prev = NULL;
+	}
+}
+
+
+void deque_print(const Deque* deque) {
+	
 }
 
 

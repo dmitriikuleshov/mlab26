@@ -41,6 +41,7 @@ void deque_push_front(Deque* deque, KEY_TYPE key, VALUE_TYPE value) {
 		deque->front->next = new_node;
 		deque->front = new_node;
 	}
+	deque->size += 1;
 }
 
 
@@ -54,6 +55,7 @@ void deque_push_back(Deque* deque, KEY_TYPE key, VALUE_TYPE value) {
 		deque->back->prev = new_node;
 		deque->back = new_node;
 	}
+	deque->size += 1;
 }
 
 
@@ -65,6 +67,7 @@ void deque_pop_front(Deque* deque) {
 		free(deque->front);
 		deque->front = new_front;
 		deque->front->next = NULL;
+		deque->size -= 1;
 	}
 }
 
@@ -77,6 +80,7 @@ void deque_pop_back(Deque* deque) {
 		free(deque->back);
 		deque->back = new_back;
 		deque->back->prev = NULL;
+		deque->size -= 1;
 	}
 }
 
@@ -90,13 +94,36 @@ void deque_print(const Deque* deque) {
 	}
 }
 
-size_t deque_size(const Deque*) {
+size_t deque_size(const Deque* deque) {
+	return deque->size;
+}
 
-};
 
+void deque_insert(Deque* deque,const int index, const KEY_TYPE key, const VALUE_TYPE value) {
+	Iterator* iter = iter_create(deque);
+	int iter_index = 0;
+	while (iter_index != index) {
+		iter_next(iter);
+		iter_index += 1;
+	}
+	Node* new_node = node_create(key, value);
+	new_node->next = iter->node;
+	new_node->prev = iter->node->prev;
 
-size_t deque_size(const Deque*) {
+	iter->node->prev->next = new_node;
+	iter->node->prev = new_node;
+}
 
+void deque_remove(Deque* deque, const int index) {
+	Iterator* iter = iter_create(deque);
+	int iter_index = 0;
+	while (iter_index != index) {
+		iter_next(iter);
+		iter_index += 1;
+	}
+	iter->node->prev->next = iter->node->next;
+	iter->node->next->prev = iter->node->prev;
+	free(iter->node);
 }
 
 

@@ -35,7 +35,7 @@ void deque_pop_front(Deque*);
 void deque_pop_back(Deque*);
 void deque_print(const Deque*);
 size_t deque_size(const Deque*);
-void deque_insert(Deque*, const DATA_TYPE);
-void deque_erase(Deque*, const KEY_TYPE);
+void deque_insert(Deque*, const int index, const KEY_TYPE, const VALUE_TYPE);
+void deque_remove(Deque*, const int index);
 
 #endif

@@ -18,24 +18,6 @@ void test1() {
 	printf("\n");
 }
 
-void test2() {
-	printf("TEST2:\n");
-	Deque* deque1 = deque_create();
-	deque_push_front(deque1, 3, 0);
-	deque_push_front(deque1, 1, 0);
-	deque_push_front(deque1, 4, 0);
-	deque_push_front(deque1, 100, 0);
-	deque_push_front(deque1, 6, 0);
-
-	deque1 = deque_merge_sort_recursive(deque1);
-	deque_print(deque1);
-
-
-	deque_clean(deque1);
-	free(deque1);
-	printf("\n");
-}
-
 
 void test3() {
 	printf("TEST3:\n");
@@ -143,11 +125,5 @@ void test6() {
 
 int main(void) {
 	test3();
-	//test4();
-	// while(1) {
-	// 	char* command[20];
-	// 	scanf("%c", command);
-	// 	if (!strcmp(command, "4")) test4();
-	// }
 	return 0;
 }

@@ -200,13 +200,8 @@ Deque* merge_deques(Deque* deque1, Deque* deque2) {
 }
 
 
-Deque* deque_merge_sort_merge(Deque* deque1, Deque* deque2) {
-    Deque* result = merge_deques(deque1, deque2);
-    return result;
-}
-
 // TODO - debug
-Deque* deque_merge_sort_recursive(Deque* deque) {
+Deque* deque_merge_sort_recursive(Deque* deque, bool main_deque) {
     if (deque_size(deque) <= 1) {
         return deque;
 	}
@@ -225,13 +220,17 @@ Deque* deque_merge_sort_recursive(Deque* deque) {
         deque_push_back(right_half, deque->front->key, deque->front->value);
         deque_pop_front(deque);
     }
+	
+	if (!main_deque) {
+		free(deque);
+	}
 
     // Recursively sort each half
-    left_half = deque_merge_sort_recursive(left_half);
-    right_half = deque_merge_sort_recursive(right_half);
+    left_half = deque_merge_sort_recursive(left_half, false);
+    right_half = deque_merge_sort_recursive(right_half, false);
 
     // Merge the sorted halves
-    Deque* result = deque_merge_sort_merge(left_half, right_half);
+    Deque* result = merge_deques(left_half, right_half);
 
     // Clean up temporary deques
     deque_clean(left_half);
@@ -244,7 +243,7 @@ Deque* deque_merge_sort_recursive(Deque* deque) {
 
 
 void deque_merge_sort(Deque* deque) {
-    Deque* sorted_deque = deque_merge_sort_recursive(deque);
+    Deque* sorted_deque = deque_merge_sort_recursive(deque, true);
     // Copy sorted elements back to original deque
     while (!deque_is_empty(sorted_deque)) {
         deque_push_back(deque, sorted_deque->front->key, sorted_deque->front->value);

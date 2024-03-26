@@ -40,7 +40,6 @@ void deque_remove(Deque*, const int index);
 void deque_clean(Deque* deque);
 Deque* merge_deques(Deque* deque1, Deque* deque2);
 void deque_merge_sort(Deque* deque);
-Deque* deque_merge_sort_merge(Deque* deque1, Deque* deque2);
-Deque* deque_merge_sort_recursive(Deque* deque);
+Deque* deque_merge_sort_recursive(Deque* deque, bool main_deque);
 
 #endif

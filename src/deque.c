@@ -1,5 +1,5 @@
-#include <deque.h>
-#include <iterator.h>
+#include "../headers/deque.h"
+#include "../headers/iterator.h"
 
 
 Node* node_create(KEY_TYPE key, VALUE_TYPE value) {
@@ -22,19 +22,21 @@ Deque* deque_create() {
 		printf("Memory allocation error for the new deque\n");
 		exit(1);
 	}
+	new_deque->back = NULL;
+	new_deque->front = NULL;
 	new_deque->size = 0;
 	return new_deque;
 }
 
 
 bool deque_is_empty(const Deque* deque) {
-	return (deque->back == NULL && deque->front == NULL);
+	return (deque->back == NULL || deque->front == NULL);
 }
 
 
 void deque_push_front(Deque* deque, const KEY_TYPE key, const VALUE_TYPE value) {
 	Node* new_node = node_create(key, value);
-	if (deque->front == NULL && deque->back == NULL) {
+	if (deque->front == NULL || deque->back == NULL) {
 		deque->back = new_node;
 		deque->front = new_node;
 	} else {
@@ -48,7 +50,7 @@ void deque_push_front(Deque* deque, const KEY_TYPE key, const VALUE_TYPE value) 
 
 void deque_push_back(Deque* deque,const KEY_TYPE key, const VALUE_TYPE value) {
 	Node* new_node = node_create(key, value);
-	if (deque->back == NULL && deque->front == NULL) {
+	if (deque->back == NULL || deque->front == NULL) {
 		deque->back = new_node;
 		deque->front = new_node;
 	} else {
@@ -67,6 +69,7 @@ void deque_pop_front(Deque* deque) {
 		free(deque->front);
 		deque->front = NULL;
 		deque->back = NULL;
+		deque->size -= 1;
 	} 
 	else {
 		Node* new_front = deque->front->prev;
@@ -85,6 +88,7 @@ void deque_pop_back(Deque* deque) {
 		free(deque->back);
 		deque->back = NULL;
 		deque->front = NULL;
+		deque->size -= 1;
 	} else {
 		Node* new_back = deque->back->next;
 		new_back->prev = NULL;
@@ -152,12 +156,101 @@ void deque_remove(Deque* deque, const int index) {
 	free(iter);
 }
 
+// void deque_clean(Deque* deque) {
+// 	Iterator* iter = iter_create(deque);
+// 	while (iter->node != NULL) {
+// 		iter_delete(iter);
+// 	}
+// 	free(iter);
+// }
+
 void deque_clean(Deque* deque) {
-	Iterator* iter = iter_create(deque);
-	while (iter->node != NULL) {
-		iter_delete(iter);
+	while (!deque_is_empty(deque)) {
+		deque_pop_front(deque);
 	}
-	free(iter);
 }
 
 
+Deque* merge_deques(Deque* deque1, Deque* deque2) {
+    Deque* result = deque_create();
+
+    while (!deque_is_empty(deque1) && !deque_is_empty(deque2)) {
+        if (deque1->front->key >= deque2->front->key) { // Изменение здесь: заменяем "<=" на ">="
+            deque_push_back(result, deque1->front->key, deque1->front->value);
+            deque_pop_front(deque1);
+        } else {
+            deque_push_back(result, deque2->front->key, deque2->front->value);
+            deque_pop_front(deque2);
+        }
+    }
+
+    // Append remaining elements from deque1, if any
+    while (!deque_is_empty(deque1)) {
+        deque_push_back(result, deque1->front->key, deque1->front->value);
+        deque_pop_front(deque1);
+    }
+
+    // Append remaining elements from deque2, if any
+    while (!deque_is_empty(deque2)) {
+        deque_push_back(result, deque2->front->key, deque2->front->value);
+        deque_pop_front(deque2);
+    }
+
+    return result;
+}
+
+
+Deque* deque_merge_sort_merge(Deque* deque1, Deque* deque2) {
+    Deque* result = merge_deques(deque1, deque2);
+    return result;
+}
+
+// TODO - debug
+Deque* deque_merge_sort_recursive(Deque* deque) {
+    if (deque_size(deque) <= 1) {
+        return deque;
+	}
+
+    // Split the deque into two halves
+    Deque* left_half = deque_create();
+    Deque* right_half = deque_create();
+    size_t half_size = deque_size(deque) / 2;
+
+    while (deque_size(deque) > half_size) {
+        deque_push_back(left_half, deque->front->key, deque->front->value);
+        deque_pop_front(deque);
+    }
+
+    while (!deque_is_empty(deque)) {
+        deque_push_back(right_half, deque->front->key, deque->front->value);
+        deque_pop_front(deque);
+    }
+
+    // Recursively sort each half
+    left_half = deque_merge_sort_recursive(left_half);
+    right_half = deque_merge_sort_recursive(right_half);
+
+    // Merge the sorted halves
+    Deque* result = deque_merge_sort_merge(left_half, right_half);
+
+    // Clean up temporary deques
+    deque_clean(left_half);
+    deque_clean(right_half);
+	free(left_half);
+	free(right_half);
+
+    return result;
+}
+
+
+void deque_merge_sort(Deque* deque) {
+    Deque* sorted_deque = deque_merge_sort_recursive(deque);
+    // Copy sorted elements back to original deque
+    while (!deque_is_empty(sorted_deque)) {
+        deque_push_back(deque, sorted_deque->front->key, sorted_deque->front->value);
+        deque_pop_front(sorted_deque);
+    }
+    // Clean up temporary deque
+    deque_clean(sorted_deque);
+	free(sorted_deque);
+}

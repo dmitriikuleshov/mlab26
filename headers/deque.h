@@ -38,5 +38,9 @@ size_t deque_size(const Deque*);
 void deque_insert(Deque*, const int index, const KEY_TYPE, const VALUE_TYPE);
 void deque_remove(Deque*, const int index);
 void deque_clean(Deque* deque);
+Deque* merge_deques(Deque* deque1, Deque* deque2);
+void deque_merge_sort(Deque* deque);
+Deque* deque_merge_sort_merge(Deque* deque1, Deque* deque2);
+Deque* deque_merge_sort_recursive(Deque* deque);
 
 #endif

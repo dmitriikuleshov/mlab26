@@ -106,63 +106,118 @@ void deque_print(const Deque* deque) {
 		printf("(key="FORMAT_SPECIFIER_KEY_TYPE ", value=" FORMAT_SPECIFIER_VALUE_TYPE ") ", cur_node->key, cur_node->value);
 		cur_node = iter_next(iter);
 	}
+	printf("\n");
 	free(iter);
 }
+
 
 size_t deque_size(const Deque* deque) {
 	return deque->size;
 }
 
 
-void deque_insert(Deque* deque,const int index, const KEY_TYPE key, const VALUE_TYPE value) {
-	Iterator* iter = iter_create(deque);
-	int iter_index = 0;
-	while (iter_index != index) {
-		if (iter->node == NULL) {
-        	fprintf(stderr, "Iterator is at the end. LIST INDEX OUT OF RANGE\n");
-        	return;
-		}
-		iter_next(iter);
-		iter_index += 1;
-	}
-	Node* new_node = node_create(key, value);
-	new_node->next = iter->node;
-	new_node->prev = iter->node->prev;
+void deque_insert(Deque* deque, const int index, const KEY_TYPE key, const VALUE_TYPE value) {
+    // check if index is not correct
+    if (index < 0 || index > deque->size) {
+        fprintf(stderr, "Invalid index for insertion.\n");
+        return;
+    }
 
-	iter->node->prev->next = new_node;
-	iter->node->prev = new_node;
-	
-	deque->size += 1;
-	free(iter);
+	Node* new_node = node_create(key, value);
+
+    // insert in the beginning 
+    if (index == 0) {
+        if (deque->back == NULL) { // if deque is empty
+            deque->back = new_node;
+            deque->front = new_node;
+        } else {
+            new_node->next = deque->back;
+            deque->back->prev = new_node;
+            deque->back = new_node;
+        }
+    } 
+    // insert in the ending
+    else if (index == deque->size) {
+        if (deque->front == NULL) { // if deque is empty
+            deque->back = new_node;
+            deque->front = new_node;
+        } else {
+            new_node->prev = deque->front;
+            deque->front->next = new_node;
+            deque->front = new_node;
+        }
+    } 
+    // insert in the middle
+    else {
+        int i;
+        Node* current = deque->back;
+        for (i = 0; i < index - 1; i++) {
+            current = current->next;
+        }
+        new_node->next = current->next;
+        new_node->prev = current;
+        current->next->prev = new_node;
+        current->next = new_node;
+    }
+
+    deque->size++;
 }
+
+
 
 void deque_remove(Deque* deque, const int index) {
-	Iterator* iter = iter_create(deque);
-	int iter_index = 0;
-	while (iter_index != index) {
-		if (iter->node == NULL) {
-        	fprintf(stderr, "Iterator is at the end. LIST INDEX OUT OF RANGE\n");
-        	return;
-		}
-		iter_next(iter);
-		iter_index += 1;
-	}
-	iter->node->prev->next = iter->node->next;
-	iter->node->next->prev = iter->node->prev;
-	free(iter->node);
+    // check if index is not correct
+    if (index < 0 || index >= deque->size) {
+        fprintf(stderr, "Invalid index for removal.\n");
+        return;
+    }
 
-	deque->size -= 1;
+    Node* node_to_delete;
 
-	free(iter);
+    // remove from the beginning 
+    if (index == 0) {
+        if (deque->back == NULL) { // if deque is empty
+            fprintf(stderr, "Deque is empty, cannot remove.\n");
+            return;
+        }
+        node_to_delete = deque->back;
+        deque->back = deque->back->next;
+        if (deque->back == NULL) { // remove the last element
+            deque->front = NULL;
+        } else {
+            deque->back->prev = NULL;
+        }
+    } 
+    // remove from the end
+    else if (index == deque->size - 1) {
+        if (deque->front == NULL) { // if deque is empty
+            fprintf(stderr, "Deque is empty, cannot remove.\n");
+            return;
+        }
+        node_to_delete = deque->front;
+        deque->front = deque->front->prev;
+        if (deque->front == NULL) { // if remove the last element
+            deque->back = NULL;
+        } else {
+            deque->front->next = NULL;
+        }
+    } 
+    // remove from the middle
+    else {
+        int i;
+        Node* current = deque->back;
+        for (i = 0; i < index; i++) {
+            current = current->next;
+        }
+        node_to_delete = current;
+        current->prev->next = current->next;
+        current->next->prev = current->prev;
+    }
+
+    free(node_to_delete);
+    deque->size--;
 }
 
-// void deque_clean(Deque* deque) {
-// 	Iterator* iter = iter_create(deque);
-// 	while (iter->node != NULL) {
-// 		iter_delete(iter);
-// 	}
-// 	free(iter);
-// }
 
 void deque_clean(Deque* deque) {
 	while (!deque_is_empty(deque)) {
@@ -175,7 +230,7 @@ Deque* merge_deques(Deque* deque1, Deque* deque2) {
     Deque* result = deque_create();
 
     while (!deque_is_empty(deque1) && !deque_is_empty(deque2)) {
-        if (deque1->front->key >= deque2->front->key) { // Изменение здесь: заменяем "<=" на ">="
+        if (deque1->front->key >= deque2->front->key) { 
             deque_push_back(result, deque1->front->key, deque1->front->value);
             deque_pop_front(deque1);
         } else {
@@ -184,7 +239,7 @@ Deque* merge_deques(Deque* deque1, Deque* deque2) {
         }
     }
 
-    // Append remaining elements from deque1, if any
+    // Add the remaining elements from deque1, if any
     while (!deque_is_empty(deque1)) {
         deque_push_back(result, deque1->front->key, deque1->front->value);
         deque_pop_front(deque1);
@@ -200,7 +255,6 @@ Deque* merge_deques(Deque* deque1, Deque* deque2) {
 }
 
 
-// TODO - debug
 Deque* deque_merge_sort_recursive(Deque* deque, bool main_deque) {
     if (deque_size(deque) <= 1) {
         return deque;

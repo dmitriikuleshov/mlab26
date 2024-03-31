@@ -121,8 +121,20 @@ void test4() {
 }
 
 
+void test5() {
+	Deque* deque = deque_create();
+	deque_print(deque);
+	deque_merge_sort(deque);
+	deque_pop_back(deque);
+	deque_pop_front(deque);
+
+	deque_clean(deque);
+	deque_push_front(deque, 1, 0);
+	deque_clean(deque);
+	free(deque);
+}
+
 int main(void) {
-	//printf("test1: %d", test1());
-	test4();
+	test5();
 	return 0;
 }

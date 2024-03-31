@@ -297,6 +297,9 @@ Deque* deque_merge_sort_recursive(Deque* deque, bool main_deque) {
 
 
 void deque_merge_sort(Deque* deque) {
+    if (deque_is_empty(deque)) {
+        return;
+    }
     Deque* sorted_deque = deque_merge_sort_recursive(deque, true);
     // Copy sorted elements back to original deque
     while (!deque_is_empty(sorted_deque)) {
